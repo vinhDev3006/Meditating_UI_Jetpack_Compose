@@ -218,8 +218,7 @@ fun FeatureItem(
             .clip(RoundedCornerShape(15.dp))
             .background(feature.darkColor)
     ) {
-        val width = constraints.maxWidth
-        val height = constraints.maxHeight
+
     }
 }
 
