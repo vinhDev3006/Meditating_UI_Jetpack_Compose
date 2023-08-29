@@ -34,7 +34,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.meditating.ui.theme.ButtonBlue
@@ -218,7 +220,18 @@ fun FeatureItem(
             .clip(RoundedCornerShape(15.dp))
             .background(feature.darkColor)
     ) {
+        val width = constraints.maxWidth
+        val height = constraints.maxHeight
 
+        val mediumColorPoint_1 = Offset(0f, height * 0.3f)
+        val mediumColorPoint_2 = Offset(width * 0.1f, height * 0.35f)
+        val mediumColorPoint_3 = Offset(width * 0.4f, height * 0.05f)
+        val mediumColorPoint_4 = Offset(width * 0.75f, height * 0.7f)
+        val mediumColorPoint_5 = Offset(width * 1.4f, -height.toFloat())
+
+        val mediumColorPath = Path().apply {
+            moveTo(mediumColorPoint_1.x, mediumColorPoint_1.y)
+        }
     }
 }
 
