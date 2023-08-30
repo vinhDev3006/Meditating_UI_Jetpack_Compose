@@ -1,5 +1,8 @@
 package com.example.meditating.ui
 
+import android.widget.AdapterView.OnItemClickListener
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,9 +23,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,8 +42,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.modifier.modifierLocalConsumer
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.meditating.standardQuadTo
+import com.example.meditating.ui.theme.AquaBlue
 import com.example.meditating.ui.theme.ButtonBlue
 import com.example.meditating.ui.theme.DarkerButtonBlue
 import com.example.meditating.ui.theme.DeepBlue
@@ -51,22 +61,37 @@ val chips = listOf("Sweet Sleep", "Insomnia", "Depression")
 @Composable
 fun HomeScreen() {
     Box(
-        modifier = Modifier
-            .background(DeepBlue)
-            .fillMaxSize()
-    ) {
-        Column {
-            GreetingSection()
-            MultipleChipSection(chips = chips)
-            CurrentMeditation()
+        modifier = Modifier.fillMaxSize()
+    ){
+        Box(
+            modifier = Modifier
+                .background(DeepBlue)
+        ) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+            ) {
+                GreetingSection()
+                MultipleChipSection(chips = chips)
+                CurrentMeditation()
+                FeatureSection(feature = FeatureList)
+            }
+        }
+        Box(
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+        ){
+            BottomMenu(menuItems = BottomMenuList)
         }
     }
+
+
 }
 
 
 @Composable
 fun GreetingSection(
-    name: String = "Zinh Dragon"
+    name: String = "VinhDev3006"
 ) {
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -190,7 +215,9 @@ fun CurrentMeditation(
 @Composable
 fun FeatureSection(feature: List<Feature>) {
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 80.dp)
     ) {
         Text(
             text = "Features",
@@ -200,10 +227,9 @@ fun FeatureSection(feature: List<Feature>) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(horizontal = 7.5.dp),
-            modifier = Modifier.fillMaxHeight()
         ) {
             items(feature.size){
-
+                FeatureItem(feature = feature[it])
             }
         }
     }
@@ -231,11 +257,165 @@ fun FeatureItem(
 
         val mediumColorPath = Path().apply {
             moveTo(mediumColorPoint_1.x, mediumColorPoint_1.y)
+            standardQuadTo(mediumColorPoint_1, mediumColorPoint_2)
+            standardQuadTo(mediumColorPoint_2, mediumColorPoint_3)
+            standardQuadTo(mediumColorPoint_3, mediumColorPoint_4)
+            standardQuadTo(mediumColorPoint_4, mediumColorPoint_5)
+            lineTo(width.toFloat() + 100f, height.toFloat() + 100f)
+            lineTo(-100f, height.toFloat() + 100f)
+            close()
+        }
+
+
+        val lightColorPoint_1 = Offset(0f, height * 0.3f)
+        val lightColorPoint_2 = Offset(width * 0.1f, height * 0.35f)
+        val lightColorPoint_3 = Offset(width * 0.3f, height * 0.35f)
+        val lightColorPoint_4 = Offset(width * 0.65f, height.toFloat())
+        val lightColorPoint_5 = Offset(width * 1.4f, -height.toFloat() / 3f)
+
+        val lightColorPath = Path().apply {
+            moveTo(lightColorPoint_1.x, lightColorPoint_1.y)
+            standardQuadTo(lightColorPoint_1, lightColorPoint_2)
+            standardQuadTo(lightColorPoint_2, lightColorPoint_3)
+            standardQuadTo(lightColorPoint_3, lightColorPoint_4)
+            standardQuadTo(lightColorPoint_4, lightColorPoint_5)
+            lineTo(width.toFloat() + 100f, height.toFloat() + 100f)
+            lineTo(-100f, height.toFloat() + 100f)
+            close()
+        }
+
+
+        Canvas(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            drawPath(
+                path = mediumColorPath,
+                color = feature.mediumColor
+            )
+            drawPath(
+                path = lightColorPath ,
+                color = feature.lightColor
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(15.dp)
+        ) {
+            Text(
+                text = feature.title,
+                style = MaterialTheme.typography.titleMedium,
+                lineHeight = 26.sp,
+                color = Color.White,
+                modifier = Modifier.align(Alignment.TopStart)
+            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .fillMaxWidth()
+            ){
+                Icon(
+                    imageVector = feature.icon,
+                    contentDescription = feature.title,
+                    tint = Color.White,
+                )
+
+                Button(
+                    border = BorderStroke(3.dp, Color.White),
+                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White)
+                    ,
+                    onClick = { /*TODO*/ }
+                ) {
+                    Text(
+                        text = "Start",
+                        color = Color.White,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+
+                        )
+                }
+            }
+
         }
     }
 }
 
 
+@Composable
+fun BottomMenu(
+    menuItems: List<BottomMenuContent>,
+    highlightedColor: Color = ButtonBlue,
+    activeTextColor: Color = Color.White,
+    inactiveColor: Color = AquaBlue,
+    initialSelectedItemIndex: Int = 0
+){
+    var selectedItemIndex by remember {
+        mutableStateOf(initialSelectedItemIndex)
+    }
+    Row (
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(DeepBlue)
+            .padding(15.dp)
+    ) {
+        menuItems.forEachIndexed { index, bottomMenuItem ->
+            BottomMenuItem(
+                content = bottomMenuItem,
+                isSelected = index == selectedItemIndex,
+                activeHighlightColor = highlightedColor,
+                activeTextColor = activeTextColor,
+                inactiveTextColor = inactiveColor
+            ) {
+                selectedItemIndex = index
+            }
+        }
+    }
+}
+
+
+@Composable
+fun BottomMenuItem(
+    content: BottomMenuContent,
+    modifier: Modifier = Modifier,
+    isSelected: Boolean = false,
+    activeHighlightColor: Color = ButtonBlue,
+    activeTextColor: Color = Color.White,
+    inactiveTextColor: Color = AquaBlue,
+    onItemClick: () -> Unit
+){
+    Column(
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .clickable { onItemClick }
+    ) {
+        Box (
+            contentAlignment = Alignment.Center,
+            modifier = modifier
+                .clip(RoundedCornerShape(10.dp))
+                .background(if (isSelected) activeHighlightColor else Color.Transparent)
+                .padding(10.dp)
+        ) {
+            Icon(
+                imageVector = content.icon,
+                contentDescription = "Menu Item Icon",
+                tint = if (isSelected) activeTextColor else inactiveTextColor,
+                modifier = Modifier.size(20.dp)
+            )
+        }
+        Text(
+            text = content.title,
+            color = if (isSelected) activeTextColor else inactiveTextColor
+        )
+    }
+}
 @Preview
 @Composable
 fun HomeScreenPreview() {
@@ -263,8 +443,11 @@ fun CurrentMeditationPreview() {
 @Preview(showBackground = true, backgroundColor = 4210752)
 @Composable
 fun FeatureSectionPreview() {
-    val feature_1 =
-        Feature("Sleep Meditation", Icons.Default.Star, Color.White, Color.Gray, Color.Black)
-    FeatureSection(feature = listOf(feature_1))
+    FeatureSection(feature = FeatureList)
 }
 
+@Preview
+@Composable
+fun BottomMenuPreview(){
+    BottomMenu(menuItems = BottomMenuList)
+}
