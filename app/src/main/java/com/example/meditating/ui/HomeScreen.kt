@@ -394,7 +394,7 @@ fun BottomMenuItem(
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier
-            .clickable { onItemClick }
+            .clickable { onItemClick() }
     ) {
         Box (
             contentAlignment = Alignment.Center,
